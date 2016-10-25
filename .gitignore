@@ -1,0 +1,13 @@
+# Node Files
+node_modules
+yarn-error.log
+tmp
+coverage
+docs
+.yarnclean
+
+# Compiled Files
+src/img/sprite.png
+src/img/sprite@2x.png
+src/sass/sprite.scss
+assets/
