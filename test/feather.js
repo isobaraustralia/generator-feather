@@ -22,6 +22,10 @@ describe('Feather Generator', function(){
       })
     })
 
+		beforeEach('wait', function(done){
+			setTimeout(done, 100)
+		})
+
     it('can grab the latest package', function(){
       this.timeout(15000)
       return Bootstrap.getLatest()
