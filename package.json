@@ -1,9 +1,10 @@
 {
  "name": "generator-feather",
- "version": "0.0.1",
+ "version": "0.1.0",
  "description": "A generator for sitefinity-feather builds",
  "keywords": [
-  "yeoman-generator"
+   "yeoman-generator",
+	 "sitefinity"
  ],
  "author": "Mark Beukers",
  "license": "MIT",
