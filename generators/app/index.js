@@ -44,16 +44,24 @@ module.exports = generators.Base.extend({
 
 	writing: function(){
 
-		// Write Standard files
-		const copy = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file))
-		const files = ['package.json', 'yarn.lock', 'webpack.config.js', 'src/']
-		R.map(copy(this), files)
-
-		// Write Feather
+		// Bulk Copy Feather
+		const origPath = this.sourceRoot()
 		const frameworkProp = R.propEq('name', this.answers.framework)
 		const pkg = R.find(frameworkProp, this.ValidPackages)
 		this.sourceRoot( path.resolve('./tmp/feather.bootstrap/') )
 		this.bulkDirectory(pkg.path, pkg.name)
+
+		// Write Template
+		const copy = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file))
+		const files = ['package.json', 'yarn.lock', 'webpack.config.js', 'src/']
+		this.sourceRoot( origPath )
+		R.map(copy(this), files)
+
+		// Write package specific template
+		const pkgPath = origPath + '/../../' + pkg.name.toLowerCase() + '/templates'
+		this.sourceRoot(pkgPath)
+		R.map(copy(this), ['./'])
+
 	},
 
 	install: function(){
