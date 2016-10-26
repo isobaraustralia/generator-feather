@@ -3,22 +3,18 @@ const request = require('request')
 const extract = require('extract-zip')
 const fs = require('fs')
 const colors = require('colors/safe')
-const R = require('ramda')
-//var prompt = require('prompt')
-var ncp = require('ncp').ncp
 const spawn = require('child_process').spawn
+var ncp = require('ncp').ncp
+const path = require('path')
 
 // Settings
 const tmpFolder = './tmp/'
-const skeletonSrc = './tools/skeletons/'
 const zipFile = tmpFolder + 'feather.latest.zip'
 const outFolder = tmpFolder + 'feather.bootstrap/'
 const latestPackage = 'https://github.com/Sitefinity/feather-packages/archive/master.zip'
 const tick = colors.green('✔')
 const cross = colors.red('✖')
-var installing = false
 const root = __dirname.replace('tools','') // root folder of quill
-const beingLoaded = require.main.filename.indexOf('feather.js') > 0 // if being loaded with require()
 
 // Log piped files
 const ncpOptions = {transform: (read, write) => {
@@ -28,10 +24,14 @@ const ncpOptions = {transform: (read, write) => {
 
 // Expected packages to install
 const Packages = [
-  {name: 'Bootstrap', path: 'feather-packages-master/Bootstrap'},
-  {name: 'Foundation', path: 'feather-packages-master/community-packages/Foundation'},
-  {name: 'SemanticUI', path: 'feather-packages-master/community-packages/SemanticUI'},
-  {name: 'Minimal', path: 'feather-packages-master/Minimal'}
+  { name: 'Bootstrap',
+		path: 'feather-packages-master/Bootstrap'},
+  { name: 'Foundation',
+		path: 'feather-packages-master/community-packages/Foundation'},
+  { name: 'SemanticUI',
+		path: 'feather-packages-master/community-packages/SemanticUI'},
+  { name: 'Minimal',
+		path: 'feather-packages-master/Minimal'}
 ]
 module.exports.Packages = Packages
 
@@ -46,7 +46,7 @@ const VerifyPackage = (pkg) => {
 
 // Logging
 function log(msg, extra){
-  if(process.env.NODE_ENV !== 'test') console.log(msg, extra)
+  if(process.env.NODE_ENV !== 'test') extra ? console.log(msg, extra) : console.log(msg)
 }
 
 module.exports.getLatest = function(){
@@ -72,7 +72,7 @@ module.exports.getLatest = function(){
           // Validate Packages
           const ValidPackages = Packages.map(VerifyPackage)
           log('\nFound '+colors.magenta(ValidPackages.length)+' Packages:')
-          ValidPackages.forEach( pkg => {
+          ValidPackages.forEach( (pkg, key) => {
             const pre = pkg.valid ? ' ' + tick + ' ' : ' ' + cross+ ' '
             const post = pkg.installed ? ' - ' + colors.yellow('Installed!') : ''
             log(pre + pkg.name + post)
@@ -87,21 +87,12 @@ module.exports.getLatest = function(){
 
 module.exports.install = function(installPkg){
   return new Promise( (resolve, reject) => {
-    if(installing){ return true } else { installing = installPkg.name }
-    log('Installing ' + installPkg.name + ' Package..')
-
-    // Copy over the entire package
-    ncp(outFolder + installPkg.path, './' + installPkg.name, (err) => {
-      if(err) return reject(err)
-      log('Installing ' + installPkg.name + ' Skeleton..')
-
-      // Copy over skeleton
-      ncp(skeletonSrc + installPkg.name, './src/', ncpOptions, (err) => {
-        if(err) return reject(err)
-        installing = false
-        resolve(true)
-      })
-    })
+    // Extract the package and return the location
+		log('Extracting ' + installPkg.name + ' Package..')
+    ncp(outFolder + installPkg.path, outFolder + 'pkg/', ncpOptions, (err) => {
+			if(err) return reject(err)
+			return resolve(outFolder + 'pkg/')
+			})
   })
 }
 

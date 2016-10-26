@@ -7,10 +7,12 @@ var expect = chai.expect
 const exec = require('child_process').exec
 const Bootstrap = require('../scripts/feather.js')
 const fs = require('fs')
+const helpers = require('yeoman-test')
+const path = require('path')
 
 describe('Quill', function(){
 
-  describe('yarn run bootstrap', function(){
+  describe('Feather Fetcher', function(){
 
     this.timeout(5000)
 
@@ -54,11 +56,6 @@ describe('Quill', function(){
         })
     })
 
-    it('can setup skeleton files', function(){
-      expect( fs.existsSync('./src/sass/styles.sass') ).to.be.true
-      expect( fs.existsSync('./src/js/app.js') ).to.be.true
-    })
-
     it('can clean up after itself', function(){
       return Bootstrap.cleanup()
         .then(function(res){
@@ -68,12 +65,12 @@ describe('Quill', function(){
 
   })
 
-  describe('yarn run build', function(){
+  describe('yo bootstrap', function(){
 
     before('Delete assets folders', function(done){
-      exec('rm -R assets/', err => {
-        done()
-      })
+			return helpers.run(path.join(__dirname, '../app'))
+				.withPrompts({ name: 'testapp', framework: 'Bootstrap', version: 'latest' })
+				.toPromise()
     })
 
     it('has valid config', function(){
@@ -122,24 +119,6 @@ describe('Quill', function(){
         done()
       })
     })
-
-  })
-
-  describe('Skeletons', function(){
-
-    const ValidSkeleton = pkg => done => {
-      const pkgPath = './tools/skeletons/' + pkg + '/'
-      expect( fs.existsSync(pkgPath) ).to.be.true
-      // Should not overwrite core files
-      expect( fs.existsSync(pkgPath + 'sass/styles.sass') ).to.be.false
-      expect( fs.existsSync(pkgPath + 'js/app.js') ).to.be.false
-      done()
-    }
-
-    it('Bootstrap is valid', ValidSkeleton('Bootstrap'))
-    it('Minimal is valid', ValidSkeleton('Minimal'))
-    it('Foundation is valid', ValidSkeleton('Foundation'))
-    it('SemanticUI is valid', ValidSkeleton('SemanticUI'))
 
   })
 

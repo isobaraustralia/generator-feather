@@ -1,6 +1,8 @@
 'use strict'
 const generators = require('yeoman-generator')
 const R = require('ramda')
+const Feather = require('../../scripts/feather.js')
+const path = require('path')
 
 module.exports = generators.Base.extend({
 
@@ -25,17 +27,35 @@ module.exports = generators.Base.extend({
 			name: 'version',
 			message: 'What version of sitefinity are you using',
 			default: 'latest'
-		}])
+		}]).then(function(answers){
+			this.answers = answers
+		}.bind(this))
 	},
 
 	configuring: function(){
 
 	},
 
+	getPackages: function(){
+		var yo = this
+		return Feather.getLatest()
+			.then(packages => yo.ValidPackages = packages)
+	},
+
 	writing: function(){
+
+		// Write Standard files
 		const copy = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file))
 		const files = ['package.json', 'yarn.lock', 'webpack.config.js', 'src/']
 		R.map(copy(this), files)
+
+		// Write Feather
+		const frameworkProp = R.propEq('name', this.answers.framework)
+		const pkg = R.find(frameworkProp, this.ValidPackages)
+		this.sourceRoot( path.resolve('./tmp/feather.bootstrap/') )
+		console.log( this.sourceRoot() + ' + ' + pkg.path )
+		console.log( this.destinationRoot() + ' + ' + pkg.name )
+		this.bulkDirectory(pkg.path, pkg.name)
 	},
 
 	install: function(){
@@ -43,7 +63,10 @@ module.exports = generators.Base.extend({
 	},
 
 	end: function(){
-		console.log('bye')
+		return Feather.cleanup()
+			.then(function(){
+				this.log('Feather is now installed!')
+			}.bind(this))
 	}
 
 })

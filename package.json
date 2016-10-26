@@ -1,31 +1,34 @@
 {
-  "name": "generator-feather",
-  "version": "0.0.1",
-  "description": "A generator for sitefinity-feather builds",
-	"keywords": ["yeoman-generator"],
-  "author": "Mark Beukers",
-  "license": "MIT",
-	"files": [
-		"generators/app",
-		"generators/bootstrap"
-	],
-	"scripts": {
-    "bootstrap": "node ./tools/feather.js",
-    "test": "mocha -R nyan",
-    "cover": "istanbul cover _mocha test/ -- -R spec"
-	},
-  "dependencies": {
-    "yeoman-generator": "^0.24.1"
-  },
-	"devDependencies": {
-    "colors": "^1.1.2",
-    "mocha": "^3.1.2",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "request": "^2.75.0",
-    "extract-zip": "^1.5.0",
-    "ncp": "^2.0.0",
-    "prompt": "^1.0.0",
-    "ramda": "^0.22.1"
-	}
+ "name": "generator-feather",
+ "version": "0.0.1",
+ "description": "A generator for sitefinity-feather builds",
+ "keywords": [
+  "yeoman-generator"
+ ],
+ "author": "Mark Beukers",
+ "license": "MIT",
+ "files": [
+  "generators/app",
+  "generators/bootstrap"
+ ],
+ "scripts": {
+  "bootstrap": "node ./tools/feather.js",
+  "test": "mocha -R nyan",
+  "cover": "istanbul cover _mocha test/ -- -R spec"
+ },
+ "dependencies": {
+  "yeoman-generator": "^0.24.1"
+ },
+ "devDependencies": {
+  "chai": "^3.5.0",
+  "chai-as-promised": "^6.0.0",
+  "colors": "^1.1.2",
+  "extract-zip": "^1.5.0",
+  "mocha": "^3.1.2",
+  "ncp": "^2.0.0",
+  "prompt": "^1.0.0",
+  "ramda": "^0.22.1",
+  "request": "^2.75.0",
+  "yeoman-test": "^1.5.1"
+ }
 }
