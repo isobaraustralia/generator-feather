@@ -12,6 +12,5 @@ dependencies:
     - "~/.yarn-cache"
 test:
   post:
-    - yarn run test
     - yarn run cover
     - bash <(curl -s https://codecov.io/bash)

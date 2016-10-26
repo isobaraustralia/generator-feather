@@ -10,7 +10,7 @@ const fs = require('fs')
 const helpers = require('yeoman-test')
 const path = require('path')
 
-describe('Quill', function(){
+describe('Feather Generator', function(){
 
   describe('Feather Fetcher', function(){
 
@@ -65,11 +65,11 @@ describe('Quill', function(){
 
   })
 
-  describe('generator', function(){
+  describe('yo:feather', function(){
 
 		this.timeout(40000)
 
-    it('Delete assets folders', function(){
+    it('generate bootstrap from scratch', function(){
 			return helpers.run(path.join(__dirname, '../generators/app'))
 				.inTmpDir(function (dir) {
 					console.log('dirname: ', dir)
@@ -82,11 +82,9 @@ describe('Quill', function(){
 				});
     })
 
-
-		it('is ok', function(){})
 	})
 
-  describe('yarn run lint', function(){
+  describe('Linting', function(){
 
     it('can run without crashing', function(done){
       exec('yarn run lint', err => {
