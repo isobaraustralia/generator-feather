@@ -23,7 +23,7 @@ describe('Feather Generator', function(){
     })
 
 		beforeEach('wait', function(done){
-			setTimeout(done, 100)
+			setTimeout(done, 1000)
 		})
 
     it('can grab the latest package', function(){
