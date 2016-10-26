@@ -11,8 +11,8 @@
 	],
 	"scripts": {
     "bootstrap": "node ./tools/feather.js",
-    "test": "mocha tools/tests/ -R nyan",
-    "cover": "istanbul cover _mocha tools/tests/ -- -R spec"
+    "test": "mocha -R nyan",
+    "cover": "istanbul cover _mocha test/ -- -R spec"
 	},
   "dependencies": {
     "yeoman-generator": "^0.24.1"

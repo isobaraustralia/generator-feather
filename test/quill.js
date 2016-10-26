@@ -5,7 +5,7 @@ var chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
 var expect = chai.expect
 const exec = require('child_process').exec
-const Bootstrap = require('../../tools/feather.js')
+const Bootstrap = require('../scripts/feather.js')
 const fs = require('fs')
 
 describe('Quill', function(){

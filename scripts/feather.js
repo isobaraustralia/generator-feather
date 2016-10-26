@@ -113,27 +113,3 @@ module.exports.cleanup = function(){
       })
   })
 }
-
-module.exports.cli = function(){
-
-  // Catch user package selection
-  var ValidPackages = []
-  process.stdin.on('data', (text) => {
-    var installPkg = R.find(R.propEq('name', text.trim()))( ValidPackages )
-    if(!installPkg) return log(colors.red('Invalid package name: ') + text)
-    module.exports.install(installPkg)
-  })
-
-  module.exports.getLatest()
-    .catch( err => new Error('error getting package: ' + err))
-    .then( valid => {
-      log('Select a package to install:')
-      ValidPackages = valid
-      process.stdin.pause()
-    })
-  
-
-}
-
-// Execute self
-if( beingLoaded ){ module.exports.cli() }
