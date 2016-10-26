@@ -1,5 +1,7 @@
 ## generator-feather
 
+[![CircleCI](https://circleci.com/gh/Shard/generator-feather.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/Shard/generator-feather) [![codecov](https://codecov.io/gh/Shard/generator-feather/branch/master/graph/badge.svg)](https://codecov.io/gh/Shard/generator-feather)
+
 Yeoman project for bootstrapping sitefinity feather.
 
 ## Requirements
