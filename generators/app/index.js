@@ -53,16 +53,15 @@ module.exports = generators.Base.extend({
 		const frameworkProp = R.propEq('name', this.answers.framework)
 		const pkg = R.find(frameworkProp, this.ValidPackages)
 		this.sourceRoot( path.resolve('./tmp/feather.bootstrap/') )
-		console.log( this.sourceRoot() + ' + ' + pkg.path )
-		console.log( this.destinationRoot() + ' + ' + pkg.name )
 		this.bulkDirectory(pkg.path, pkg.name)
 	},
 
 	install: function(){
-		this.spawnCommand('yarn', ['install'])
+		return this.spawnCommandSync('yarn', ['install'])
 	},
 
 	end: function(){
+		console.log('cleaning up')
 		return Feather.cleanup()
 			.then(function(){
 				this.log('Feather is now installed!')

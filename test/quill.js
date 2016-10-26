@@ -17,7 +17,7 @@ describe('Quill', function(){
     this.timeout(5000)
 
     before('Delete all used folders', function(done){
-      exec('rm -R tmp/ Bootstrap/ Minimal/ Foundation/ SemanticUI/', err => {
+      exec('rm -R tmp/', err => {
         done()
       })
     })
@@ -34,25 +34,25 @@ describe('Quill', function(){
     it('can install Bootstrap', function(){
       return Bootstrap.install(Bootstrap.Packages[0])
         .then(function(res){
-          expect(res).to.be.true
+          expect(res).to.be.a('string')
         })
     })
     it('can gather Foundation', function(){
       return Bootstrap.install(Bootstrap.Packages[1])
         .then(function(res){
-          expect(res).to.be.true
+          expect(res).to.be.a('string')
         })
     })
     it('can gather SemanticUI', function(){
       return Bootstrap.install(Bootstrap.Packages[2])
         .then(function(res){
-          expect(res).to.be.true
+          expect(res).to.be.a('string')
         })
     })
     it('can gather Minimal', function(){
       return Bootstrap.install(Bootstrap.Packages[3])
         .then(function(res){
-          expect(res).to.be.true
+          expect(res).to.be.a('string')
         })
     })
 
@@ -65,51 +65,26 @@ describe('Quill', function(){
 
   })
 
-  describe('yo bootstrap', function(){
+  describe('generator', function(){
 
-    before('Delete assets folders', function(done){
-			return helpers.run(path.join(__dirname, '../app'))
+		this.timeout(40000)
+
+    it('Delete assets folders', function(){
+			return helpers.run(path.join(__dirname, '../generators/app'))
+				.inTmpDir(function (dir) {
+					console.log('dirname: ', dir)
+				})
 				.withPrompts({ name: 'testapp', framework: 'Bootstrap', version: 'latest' })
 				.toPromise()
+				.then(function (dir) {
+					console.log(dir)
+					expect( fs.existsSync(dir + '/package.json') ).to.be.true
+				});
     })
 
-    it('has valid config', function(){
-      const config = require('../../webpack.config.js')
-      expect(config).to.be.an('object')
-    })
 
-    it('can run build', function(done){
-      this.timeout(10000)
-      exec('yarn run build', err => {
-        expect(err).to.not.be.an('error')
-        done()
-      })
-    })
-
-    it('can produce a JS bundle', function(){
-      expect( fs.existsSync('./assets/js/app.js') ).to.be.true
-    })
-    it('can produce JS sourcemaps', function(){
-      expect( fs.existsSync('./assets/js/app.js.map') ).to.be.true
-    })
-    it('can produce a CSS bundle', function(){
-      expect( fs.existsSync('./assets/css/styles.css') ).to.be.true
-    })
-    it('can produce CSS sourcemaps', function(){
-      expect( fs.existsSync('./assets/css/styles.css.map') ).to.be.true
-    })
-    it('can optimize and produce source images', function(){
-      expect( fs.existsSync('./assets/img/favicon.png') ).to.be.true
-    })
-    it('can proudce spritesheets', function(){
-      expect( fs.existsSync('./assets/img/sprite.png') ).to.be.true
-      expect( fs.existsSync('./assets/img/sprite@2x.png') ).to.be.true
-    })
-  })
-
-  describe('yarn run dev', function(){
-    it('can startup the dev server')
-  })
+		it('is ok', function(){})
+	})
 
   describe('yarn run lint', function(){
 
