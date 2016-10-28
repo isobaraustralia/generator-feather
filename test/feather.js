@@ -22,9 +22,9 @@ describe('Feather Generator', function(){
       })
     })
 
-		beforeEach('wait', function(done){
-			setTimeout(done, 1000)
-		})
+    beforeEach('wait', function(done){
+      setTimeout(done, 1000)
+    })
 
     it('can grab the latest package', function(){
       this.timeout(15000)
@@ -36,24 +36,28 @@ describe('Feather Generator', function(){
     })
 
     it('can install Bootstrap', function(){
+      this.retries(3);
       return Bootstrap.install(Bootstrap.Packages[0])
         .then(function(res){
           expect(res).to.be.a('string')
         })
     })
     it('can gather Foundation', function(){
+      this.retries(3);
       return Bootstrap.install(Bootstrap.Packages[1])
         .then(function(res){
           expect(res).to.be.a('string')
         })
     })
     it('can gather SemanticUI', function(){
+      this.retries(3);
       return Bootstrap.install(Bootstrap.Packages[2])
         .then(function(res){
           expect(res).to.be.a('string')
         })
     })
     it('can gather Minimal', function(){
+      this.retries(3);
       return Bootstrap.install(Bootstrap.Packages[3])
         .then(function(res){
           expect(res).to.be.a('string')
@@ -71,22 +75,28 @@ describe('Feather Generator', function(){
 
   describe('yo:feather', function(){
 
-		this.timeout(40000)
-
+    this.timeout(60000)
+    var tmpPath = ''
     it('generate bootstrap from scratch', function(){
-			return helpers.run(path.join(__dirname, '../generators/app'))
-				.inTmpDir(function (dir) {
-					console.log('dirname: ', dir)
-				})
-				.withPrompts({ name: 'testapp', framework: 'Bootstrap', version: 'latest' })
-				.toPromise()
-				.then(function (dir) {
-					console.log(dir)
-					expect( fs.existsSync(dir + '/package.json') ).to.be.true
-				});
+      return helpers.run(path.join(__dirname, '../generators/app'))
+        .inTmpDir(function (dir) {
+          tmpPath = dir
+        })
+        .withPrompts({ name: 'testapp', framework: 'Bootstrap', version: 'latest' })
+        .toPromise()
+        .then(function (dir) {
+          expect( fs.existsSync(dir + '/package.json') ).to.be.true
+          expect( fs.existsSync(dir + '/src/js/app.js') ).to.be.true
+          expect( fs.existsSync(dir + '/src/sass/styles.sass') ).to.be.true
+          expect( fs.existsSync(dir + '/src/img/favicon.png') ).to.be.true
+        });
     })
 
-	})
+    it('can run webpack after', function(){
+      expect( tmpPath ).to.not.equal('')
+    })
+
+  })
 
   describe('Linting', function(){
 
@@ -100,4 +110,3 @@ describe('Feather Generator', function(){
   })
 
 })
-

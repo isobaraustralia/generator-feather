@@ -1,6 +1,6 @@
 {
 	"name": "generator-feather",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"description": "A generator for sitefinity-feather builds",
   "repository": "http://github.com/Shard/generator-feather",
 	"keywords": [
@@ -15,7 +15,6 @@
 		"scripts"
 	],
 	"scripts": {
-		"bootstrap": "node ./tools/feather.js",
 		"test": "mocha -R nyan",
 		"cover": "istanbul cover _mocha test/ -- -R spec"
 	},
