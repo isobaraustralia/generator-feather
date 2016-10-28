@@ -92,8 +92,52 @@ describe('Feather Generator', function(){
         });
     })
 
-    it('can run webpack after', function(){
+    it('can run yarn run build', function(done){
       expect( tmpPath ).to.not.equal('')
+      exec('cd ' + tmpPath + ' && ' + 'yarn run build', err => {
+        expect(err).to.not.be.an('error')
+        expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
+        done()
+      })
+    })
+
+    it('can run webpack directly', function(done){
+      expect( tmpPath ).to.not.equal('')
+      exec('cd ' + tmpPath + ' && ' + 'webpack', err => {
+        expect(err).to.not.be.an('error')
+        expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
+        done()
+      })
+
+      it('can run webpack with minification', function(done){
+        expect( tmpPath ).to.not.equal('')
+        exec('cd ' + tmpPath + ' && ' + 'webpack --optimize-minimize --optimize-dedupe', err => {
+          expect(err).to.not.be.an('error')
+          expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+          expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+          expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
+          done()
+        })
+      })
+
+      it('can run webpack dev server')
+
+      it('can yarn run lint without error', function(done){
+        expect( tmpPath ).to.not.equal('')
+        exec('cd ' + tmpPath + ' && ' + 'yarn run lint', err => {
+          expect(err).to.not.be.an('error')
+          done()
+        })
+      })
+
+      it('can yarn run lintfix')
+      it('it can yarn run test')
+
+
     })
 
   })
