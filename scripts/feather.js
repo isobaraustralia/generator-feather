@@ -25,13 +25,13 @@ const ncpOptions = {transform: (read, write) => {
 // Expected packages to install
 const Packages = [
   { name: 'Bootstrap',
-		path: 'feather-packages-master/Bootstrap'},
+    path: 'feather-packages-master/Bootstrap'},
   { name: 'Foundation',
-		path: 'feather-packages-master/community-packages/Foundation'},
+    path: 'feather-packages-master/community-packages/Foundation'},
   { name: 'SemanticUI',
-		path: 'feather-packages-master/community-packages/SemanticUI'},
+    path: 'feather-packages-master/community-packages/SemanticUI'},
   { name: 'Minimal',
-		path: 'feather-packages-master/Minimal'}
+    path: 'feather-packages-master/Minimal'}
 ]
 module.exports.Packages = Packages
 
@@ -56,7 +56,7 @@ module.exports.getLatest = function(){
 
   return new Promise((resolve, reject) => {
     // Grab Latest Zip of feather-packages
-    log('Downloading Feather Bootstrap..')
+    log('Downloading Feather from github..')
     request
       .get(latestPackage)
       .on('error', err => reject(err))
@@ -88,11 +88,11 @@ module.exports.getLatest = function(){
 module.exports.install = function(installPkg){
   return new Promise( (resolve, reject) => {
     // Extract the package and return the location
-		log('Extracting ' + installPkg.name + ' Package..')
+    log('Extracting ' + installPkg.name + ' Package..')
     ncp(outFolder + installPkg.path, outFolder + 'pkg/', ncpOptions, (err) => {
-			if(err) return reject(err)
-			return resolve(outFolder + 'pkg/')
-			})
+      if(err) return reject(err)
+      return resolve(outFolder + 'pkg/')
+      })
   })
 }
 

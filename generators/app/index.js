@@ -51,23 +51,44 @@ module.exports = generators.Base.extend({
     this.sourceRoot( path.resolve('./tmp/feather.bootstrap/') )
     this.bulkDirectory(pkg.path, pkg.name)
 
-    // Write Template
+    // Create helper functions for copying an array of files and templates
     const copyTpl = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file))
     const copy = ctx =>file => ctx.fs.copy(ctx.templatePath(file), ctx.destinationPath(file))
-    const files = ['package.json', 'yarn.lock', 'webpack.config.js', 'src/js', 'src/sass']
+
+    // Copy Files
+    const tplFiles = [
+      '.babelrc',
+      '.editorconfig',
+      'package.json',
+      'yarn.lock',
+      'webpack.config.js',
+      'src/js',
+      'src/sass'
+    ]
+    const bulkFiles = ['src/img', 'src/fonts', 'src/sprites']
     this.sourceRoot( origPath )
-    R.map(copyTpl(this), files)
-    R.map(copy(this), ['src/img', 'src/fonts', 'src/sprites'])
+    R.map(copyTpl(this), tplFiles)
+    R.map(copy(this), bulkFiles)
 
     // Write package specific template
     const pkgPath = origPath + '/../../' + pkg.name.toLowerCase() + '/templates'
     this.sourceRoot(pkgPath)
     R.map(copy(this), ['./'])
 
+    // Foundation fixes
+    if(this.answers.framework === 'Foundation'){
+      this.log('Foundation sass fixes:')
+      this.fs.copyTpl('fix/_sf-media.sass','Foundation/assets/src/sass/sitefinity/media/_sf-media.sass')
+      this.fs.copyTpl('fix/_sf-search-box.sass','Foundation/assets/src/sass/sitefinity/searchBox/_sf-search-box.sass')
+    }
+
   },
 
   install: function(){
-    return this.spawnCommandSync('yarn', ['install'])
+    this.spawnCommandSync('yarn', ['install'])
+    if(this.answers.framework === 'Foundation'){
+      this.spawnCommandSync('yarn', ['install'], {cwd: './Foundation'})
+    }
   },
 
   end: function(){

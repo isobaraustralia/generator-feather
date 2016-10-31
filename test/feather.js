@@ -73,7 +73,7 @@ describe('Feather Generator', function(){
 
   })
 
-  describe('yo:feather', function(){
+  describe('Feather Bootstrap', function(){
 
     this.timeout(60000)
     var tmpPath = ''
@@ -142,13 +142,68 @@ describe('Feather Generator', function(){
 
   })
 
-  describe('Linting', function(){
+  describe('Foundation', function(){
 
-    it('can run without crashing', function(done){
-      exec('yarn run lint', err => {
-        //expect(err).to.not.be.an('error')
+    this.timeout(60000)
+    var tmpPath = ''
+    it('generate Foundation from scratch', function(){
+      return helpers.run(path.join(__dirname, '../generators/app'))
+        .inTmpDir(function (dir) {
+          tmpPath = dir
+        })
+        .withPrompts({ name: 'testapp', framework: 'Foundation', version: 'latest' })
+        .toPromise()
+        .then(function (dir) {
+          expect( fs.existsSync(dir + '/package.json') ).to.be.true
+          expect( fs.existsSync(dir + '/src/js/app.js') ).to.be.true
+          expect( fs.existsSync(dir + '/src/sass/styles.sass') ).to.be.true
+          expect( fs.existsSync(dir + '/src/img/favicon.png') ).to.be.true
+        });
+    })
+
+    it('can run yarn run build', function(done){
+      expect( tmpPath ).to.not.equal('')
+      exec('cd ' + tmpPath + ' && ' + 'yarn run build', err => {
+        expect(err).to.not.be.an('error')
+        expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
         done()
       })
+    })
+
+    it('can run webpack directly', function(done){
+      expect( tmpPath ).to.not.equal('')
+      exec('cd ' + tmpPath + ' && ' + 'webpack', err => {
+        expect(err).to.not.be.an('error')
+        expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+        expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
+        done()
+      })
+
+      it('can run webpack with minification', function(done){
+        expect( tmpPath ).to.not.equal('')
+        exec('cd ' + tmpPath + ' && ' + 'webpack --optimize-minimize --optimize-dedupe', err => {
+          expect(err).to.not.be.an('error')
+          expect( fs.existsSync(tmpPath + '/package.json') ).to.be.true
+          expect( fs.existsSync(tmpPath + '/assets/js/app.js') ).to.be.true
+          expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
+          done()
+        })
+      })
+
+    })
+
+    describe('Linting', function(){
+
+      it('can run without crashing', function(done){
+        exec('yarn run lint', err => {
+          //expect(err).to.not.be.an('error')
+          done()
+        })
+      })
+
     })
 
   })
