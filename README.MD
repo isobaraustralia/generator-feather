@@ -6,10 +6,10 @@ Yeoman project for setting up a modern build setup for [Sitefinity Feather](http
 
 ## Features
 
-- [X] Webpack with babel, sass and asset loading
-- [ ] Webpack Devserver with support for hot reloading and inlining for a refresh-free frontend workflow
-- [X] Installs feather from source
+- [X] Webpack with support for SASS, ES5 with babel, Spritesmith and image optimization
+- [X] Support for Bootstrap/Foundation/SemantecUi/Minimal Feather packages
 - [ ] Support for previous version of sitefinity/feather
+- [X] Webpack Dev Server with support for setting up inline hot reloading
 
 ## Requirements
 
@@ -40,8 +40,9 @@ Once you begin, you may choose which framework you want and which version of fea
 Once installed, you will now be able to use yarn to run your project's tasks.
 
 - `yarn run build` - Uses webpack to compile out to `/assets`
+- `yarn run build:dev` - Builds a development version to disk
 - `yarn run dev`  - Starts up a local dev server for the project on http://localhost:8080/
-- `yarn run lint` - Lint for code issues
+- `yarn run lint` - Lint for code issues using eslint
 - `yarn run lintfix` - Fix linting issues
 - `yarn run test` - Built in mocha and unit tests to get you going
 

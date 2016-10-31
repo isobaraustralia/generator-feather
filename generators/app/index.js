@@ -62,6 +62,8 @@ module.exports = generators.Base.extend({
       'package.json',
       'yarn.lock',
       'webpack.config.js',
+      'webpack.prod.config.js',
+      'webpack.dev.config.js',
       'src/js',
       'src/sass'
     ]

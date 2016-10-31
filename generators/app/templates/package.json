@@ -26,8 +26,8 @@
     "webpack-spritesmith": "^0.2.6"
   },
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server",
+    "build": "webpack --config webpack.prod.config.js",
+    "dev": "webpack-dev-server --config webpack.dev.config.js",
     "lint": "eslint scripts/ src/js/",
     "lintfix": "eslint --fix scripts/ src/js/",
     "docs": "sassdoc src/sass/ --dest docs/"

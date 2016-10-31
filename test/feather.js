@@ -51,6 +51,7 @@ describe('Feather Fetcher', function(){
         expect(res).to.be.a('string')
       })
   })
+
   it('can gather Minimal', function(){
     this.retries(3);
     return Bootstrap.install(Bootstrap.Packages[3])
