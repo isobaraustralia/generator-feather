@@ -52,7 +52,8 @@ module.exports = generators.Base.extend({
     this.bulkDirectory(pkg.path, pkg.name)
 
     // Create helper functions for copying an array of files and templates
-    const copyTpl = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file))
+    const tplConfig = this.answers
+    const copyTpl = ctx =>file => ctx.fs.copyTpl(ctx.templatePath(file), ctx.destinationPath(file), tplConfig)
     const copy = ctx =>file => ctx.fs.copy(ctx.templatePath(file), ctx.destinationPath(file))
 
     // Copy Files
@@ -88,9 +89,6 @@ module.exports = generators.Base.extend({
 
   install: function(){
     this.spawnCommandSync('yarn', ['install'])
-    if(this.answers.framework === 'Foundation'){
-      this.spawnCommandSync('yarn', ['install'], {cwd: './Foundation'})
-    }
   },
 
   end: function(){

@@ -1,11 +1,12 @@
 {
-  "name": "quill",
-  "version": "1.0.0",
-  "description": "Frontend tools for building feather projects",
+  "name": "<% name %>",
+  "version": "0.1.0",
+  "description": "",
   "main": "gulpfile.js",
-  "author": "Mark Beukers",
-  "license": "UNLICENSED",
+  "author": "",
   "dependencies": {
+    <%- framework == 'Bootstrap' ? '"bootstrap-sass": "^3.3.7",': '' %>
+    <%- framework == 'Foundation' ? '"foundation-sites": "^6.2.4",': '' %>
     "jquery": "^3.1.1"
   },
   "devDependencies": {
