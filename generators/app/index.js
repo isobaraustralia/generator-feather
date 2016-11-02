@@ -78,13 +78,6 @@ module.exports = generators.Base.extend({
     this.sourceRoot(pkgPath)
     R.map(copy(this), ['./'])
 
-    // Foundation fixes
-    if(this.answers.framework === 'Foundation'){
-      this.log('Foundation sass fixes:')
-      this.fs.copyTpl('fix/_sf-media.sass','Foundation/assets/src/sass/sitefinity/media/_sf-media.sass')
-      this.fs.copyTpl('fix/_sf-search-box.sass','Foundation/assets/src/sass/sitefinity/searchBox/_sf-search-box.sass')
-    }
-
   },
 
   install: function(){

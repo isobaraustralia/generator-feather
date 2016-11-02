@@ -53,7 +53,7 @@ describe('Foundation', function(){
     assert.file(tmpPath + '/assets/css/styles.css.map')
     var styles = fs.readFileSync(tmpPath + '/assets/css/styles.css', {encoding: 'utf8'})
     expect(styles).to.be.a('string')
-    expect(styles).to.contain('meta.foundation') //foundation
+    expect(styles).to.contain('.foundation-mq') //foundation
     expect(styles).to.contain('.sf-') //sitefinity
   })
 
