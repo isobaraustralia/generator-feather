@@ -8,11 +8,13 @@ const exec = require('child_process').exec
 const fs = require('fs')
 const helpers = require('yeoman-test')
 const path = require('path')
+const assert = require('yeoman-assert')
 
 describe('Foundation', function(){
 
-  this.timeout(60000)
+  this.timeout(120000)
   var tmpPath = ''
+
   it('generate Foundation from scratch', function(){
     return helpers.run(path.join(__dirname, '../generators/app'))
       .inTmpDir(function (dir) {
@@ -37,6 +39,22 @@ describe('Foundation', function(){
       expect( fs.existsSync(tmpPath + '/assets/js/app.js.map') ).to.be.true
       done()
     })
+  })
+
+  it('can generate a valid JS bundle', function(){
+    expect(tmpPath).to.not.equal('')
+    var appjs = fs.readFileSync(tmpPath + '/assets/css/styles.css', {encoding: 'utf8'})
+    expect(appjs).to.be.a('string')
+  })
+
+  it('can generate a valid CSS bundle with foundation', function(){
+    expect(tmpPath).to.not.equal('')
+    assert.file(tmpPath + '/assets/css/styles.css')
+    assert.file(tmpPath + '/assets/css/styles.css.map')
+    var styles = fs.readFileSync(tmpPath + '/assets/css/styles.css', {encoding: 'utf8'})
+    expect(styles).to.be.a('string')
+    expect(styles).to.contain('meta.foundation') //foundation
+    expect(styles).to.contain('.sf-') //sitefinity
   })
 
   describe('Linting', function(){
