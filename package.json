@@ -1,6 +1,6 @@
 {
   "name": "generator-feather",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A generator for sitefinity-feather builds",
   "repository": "http://github.com/Shard/generator-feather",
   "keywords": [
