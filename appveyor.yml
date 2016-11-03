@@ -3,8 +3,8 @@ environment:
 
 install:
   - ps: Install-Product node $env:node_version
-  - choco install yarn
   - refreshenv
+  - npm i -g yarn
   - yarn global add webpack
   - yarn
 
