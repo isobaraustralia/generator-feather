@@ -1,6 +1,6 @@
 ## generator-feather
 
-![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg) [![CircleCI](https://circleci.com/gh/Shard/generator-feather.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/Shard/generator-feather) [![Build status](https://ci.appveyor.com/api/projects/status/51thch2f1f076o3c/branch/master?svg=true)](https://ci.appveyor.com/project/Shard/generator-feather/branch/master) [![codecov](https://codecov.io/gh/Shard/generator-feather/branch/master/graph/badge.svg)](https://codecov.io/gh/Shard/generator-feather)
+![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg) [![CircleCI](https://circleci.com/gh/isobaraustralia/generator-feather.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/isobaraustralia/generator-feather) [![Build status](https://ci.appveyor.com/api/projects/status/51thch2f1f076o3c/branch/master?svg=true)](https://ci.appveyor.com/project/isobaraustralia/generator-feather/branch/master) [![codecov](https://codecov.io/gh/isobaraustralia/generator-feather/branch/master/graph/badge.svg)](https://codecov.io/gh/isobaraustralia/generator-feather)
 
 Yeoman project for setting up a modern build setup for [Sitefinity Feather](http://projectfeather.sitefinity.com/).
 
