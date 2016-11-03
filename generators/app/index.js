@@ -10,6 +10,15 @@ module.exports = generators.Base.extend({
     generators.Base.apply(this, arguments);
   },
 
+  initializing: function(){
+    return Feather.listPackages()
+      .then(function(packages){
+        this.allVersions = packages
+        this.versionsList = R.append('latest', R.map(x => x.name, packages))
+      }.bind(this))
+  },
+
+  // Prompt the user for input - http://yeoman.io/authoring/user-interactions.html
   prompting: function(){
     return this.prompt([{
       type: 'input',
@@ -23,17 +32,14 @@ module.exports = generators.Base.extend({
       choices: ['Bootstrap', 'Foundation', 'Minimal', 'SemantecUi'],
       store: true
     }, {
-      type: 'input',
+      type: 'list',
       name: 'version',
-      message: 'What version of sitefinity are you using',
+      message: 'What version of Feather do you want to use?',
+      choices: this.versionsList,
       default: 'latest'
     }]).then(function(answers){
       this.answers = answers
     }.bind(this))
-  },
-
-  configuring: function(){
-
   },
 
   getPackages: function(){

@@ -6,6 +6,7 @@ const colors = require('colors/safe')
 const spawn = require('child_process').spawn
 var ncp = require('ncp').ncp
 const path = require('path')
+const {map, zipObj} = require('ramda')
 
 // Settings
 const tmpFolder = './tmp/'
@@ -36,6 +37,8 @@ const Packages = [
 module.exports.Packages = Packages
 
 // Verify a package after it has been extracted
+// @param Object pkg
+// @return Boolean
 const VerifyPackage = (pkg) => {
   pkg.valid = false
   pkg.installed = false
@@ -45,12 +48,103 @@ const VerifyPackage = (pkg) => {
 }
 
 // Logging, disable when running test suite
+// @param String msg
+// @param Object extra
 function log(msg, extra){
   /* istanbul ignore if */
   if(process.env.NODE_ENV !== 'test') extra ? console.log(msg, extra) : console.log(msg)
 }
 
+// Gets the current version of sitefinity
+// @return Promise
+module.exports.getSitefinityVersion = function(){
+  return new Promise(resolve => {
+    return '9.2.6200.0'
+  })
+}
+
+// Takes the readme, returns a compatability table
+const parseTable = function(readme){
+
+  const tableStart = readme.indexOf('|----|----|')
+  const tableEnd = readme.indexOf('# License')
+  const justTable = readme.slice(tableStart, tableEnd)
+  const rows = justTable.trim().split(/\r?\n/).slice(1)
+
+  // Zips the row into a compatability object
+  const zipRow = zipObj(['feather_from', 'feather_to', 'sf_from', 'sf_to'])
+
+  // Parses the row into an array the gets zipped
+  // @url http://stackoverflow.com/q/40401466/79722
+  const parseRow = x => x.slice(1, -1).trim().replace('v.','').replace('v','').split(/\s+(?:\||-|to)\s+/)
+  const table = map(zipRow, map(parseRow, rows))
+  return table
+}
+module.exports.parseTable = parseTable;
+
+// Returns a list of the compatability table from feather
+// @return Promise
+module.exports.getCompatibility = function(){
+  const opts = {
+    url: 'https://raw.githubusercontent.com/Sitefinity/feather-packages/master/README.md',
+    headers: { 'User-Agent': 'request' }
+  }
+  return new Promise((resolve, reject) => {
+    log('Getting the feather -> sitefinity compatability table..')
+    request(opts, (error, res, body) => {
+      /* istanbul ignore else  */
+      if(!error && res.statusCode === 200){
+        log('Response: ' + colors.green(res.statusCode + ' OK'))
+      } else {
+        log('Response: ' + colors.red(res.statusCode + ' ERROR!'))
+        error ? reject(error) : reject('Response: ' + res.statusCode)
+      }
+      resolve(parseTable(body))
+    })
+  })
+}
+
+// Takes two versions, and returns true if x is greater than y
+// @param String x XXX.XXX.XXX
+// @param String y XX.XXXX.XXX
+const isVersionGreater = function(x,y){
+  if(y === 'latest') return false
+  if(x === 'latest') return true
+  const xs = map(parseInt, x.split('.'))
+  const ys = map(parseInt, y.split('.'))
+  for(var i in xs){
+    if(xs[i] > ys[i]) return true
+    if(xs[i] < ys[i]) return false
+  }
+  return false
+}
+module.exports.isVersionGreater = isVersionGreater
+
+// Takes a sitefinity version and a tableRow and returns true if
+//  the provided version row can be used
+// @param String sfVersion
+// @param Object tableRow
+// @return Boolean
+const isRowUsable = function(sfVersion, tableRow){
+  return isVersionGreater(sfVersion, tableRow.sf_from) &&
+    !isVersionGreater(sfVersion, tableRow.sf_to)
+    ? true : false
+}
+module.exports.isRowUsable = isRowUsable
+
+// Takes a sitefinity version and gives you the latest feather version that can be used
+// @param String sitefinityVer
+// @param Array table The return of getCompatibility()
+// @return TableRow
+module.exports.getValidVersion = function(sitefinityVer, table){
+  for(var i in table){
+    if(isRowUsable(sitefinityVer, table[i])) return table[i]
+  }
+  return false
+}
+
 // Return a list of packages as a Promise
+// @return Promise
 module.exports.listPackages = function(){
   const opts = {
     url: 'https://api.github.com/repos/Sitefinity/feather-packages/releases',
@@ -71,6 +165,7 @@ module.exports.listPackages = function(){
   })
 }
 
+// 
 module.exports.getLatest = function(){
 
   // Setup tmp folder
@@ -107,6 +202,9 @@ module.exports.getLatest = function(){
   })
 }
 
+// Install a package
+// @param Object installPkg
+// @return Promise
 module.exports.install = function(installPkg){
   return new Promise( (resolve, reject) => {
     // Extract the package and return the location
@@ -119,6 +217,9 @@ module.exports.install = function(installPkg){
   })
 }
 
+
+// Cleans up tmp folders
+// @return Promise
 module.exports.cleanup = function(){
   return new Promise(resolve => {
     spawn('rm', ['-R', tmpFolder])
