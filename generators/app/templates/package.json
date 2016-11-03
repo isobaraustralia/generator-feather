@@ -6,7 +6,7 @@
   "author": "",
   "dependencies": {
     <%- framework == 'Bootstrap' ? '"bootstrap-sass": "^3.3.7",': '' %>
-    <%- framework == 'Foundation' ? '"foundation-sites": "^6.2.4",': '' %>
+    <%- framework == 'Foundation' ? '"foundation-sites": "^5.5.3",': '' %>
     "jquery": "^3.1.1"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --config webpack.dev.config.js",
+    "dev": "webpack-dev-server --hot --inline --config webpack.dev.config.js",
     "lint": "eslint scripts/ src/js/",
     "lintfix": "eslint --fix scripts/ src/js/",
     "docs": "sassdoc src/sass/ --dest docs/"

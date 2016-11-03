@@ -1,6 +1,6 @@
 {
   "name": "generator-feather",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A generator for sitefinity-feather builds",
   "repository": "https://github.com/isobaraustralia/generator-feather.git",
   "keywords": [
