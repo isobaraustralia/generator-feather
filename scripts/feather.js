@@ -5,8 +5,7 @@ const fs = require('fs')
 const colors = require('colors/safe')
 const spawn = require('child_process').spawn
 var ncp = require('ncp').ncp
-const path = require('path')
-const {map, zipObj} = require('ramda')
+const R = require('ramda')
 
 // Settings
 const tmpFolder = './tmp/'
@@ -70,7 +69,7 @@ const parseTable = function(readme){
   const rows = justTable.trim().split(/\r?\n/).slice(1)
 
   // Zips the row into a compatability object
-  const zipRow = zipObj(['feather_from', 'feather_to', 'sf_from', 'sf_to'])
+  const zipRow = R.zipObj(['feather_from', 'feather_to', 'sf_from', 'sf_to'])
 
   // Parses the row into an array the gets zipped
   // @url http://stackoverflow.com/q/40401466/79722
@@ -84,7 +83,7 @@ const parseTable = function(readme){
     else
       return row
   }
-  const table = map(zipRow, map(safelyParseRow, rows))
+  const table = R.map(zipRow, R.map(safelyParseRow, rows))
   return table
 }
 module.exports.parseTable = parseTable;
@@ -113,8 +112,8 @@ module.exports.getCompatibility = function(){
 const isVersionGreater = function(x,y){
   if(y === 'latest') return false
   if(x === 'latest') return true
-  const xs = map(parseInt, x.split('.'))
-  const ys = map(parseInt, y.split('.'))
+  const xs = R.map(parseInt, x.split('.'))
+  const ys = R.map(parseInt, y.split('.'))
   for(var i in xs){
     if(xs[i] > ys[i]) return true
     if(xs[i] < ys[i]) return false
