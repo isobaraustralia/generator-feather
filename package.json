@@ -1,17 +1,18 @@
 {
   "name": "generator-feather",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "A generator for sitefinity-feather builds",
-  "repository": "http://github.com/Shard/generator-feather",
+  "repository": "https://github.com/isobaraustralia/generator-feather.git",
   "keywords": [
     "yeoman-generator",
     "sitefinity"
   ],
+  "homepage": "https://github.com/isobaraustralia/generator-feather",
+  "bugs": "https://github.com/isobaraustralia/generator-feather/issues",
   "author": "Mark Beukers",
   "license": "MIT",
   "files": [
-    "generators/app",
-    "generators/bootstrap",
+    "generators",
     "scripts"
   ],
   "scripts": {
