@@ -3,6 +3,7 @@ const generators = require('yeoman-generator')
 const R = require('ramda')
 const Feather = require('../../scripts/feather.js')
 const path = require('path')
+const colors = require('colors/safe')
 
 module.exports = generators.Base.extend({
 
@@ -11,10 +12,23 @@ module.exports = generators.Base.extend({
   },
 
   initializing: function(){
+    this.sfVersion = Feather.getSitefinityVersion()
+    this.log('Sitefinity ' + colors.bold(colors.green(this.sfVersion)) + ' detected')
     return Feather.listPackages()
       .then(function(packages){
+        this.log('Found ' + colors.green(packages.length) + ' versions')
         this.allVersions = packages
         this.versionsList = R.append('latest', R.map(x => x.name, packages))
+        return Feather.getCompatibility()
+      }.bind(this)).then(function(table){
+        const validVersion = Feather.getValidVersion(Feather.getSitefinityVersion(), table)
+        if(validVersion === false){
+          this.log(colors.red('Error ') + 'determining a valid package to install! defaulting to latest')
+          this.defaultVersion = 'latest'
+        } else {
+          this.defaultVersion = validVersion.feather_to
+          this.log('Compatible version detected: ' + colors.bold(colors.green(this.defaultVersion)))
+        }
       }.bind(this))
   },
 

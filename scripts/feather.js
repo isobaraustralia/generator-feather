@@ -56,11 +56,9 @@ function log(msg, extra){
 }
 
 // Gets the current version of sitefinity
-// @return Promise
+// @return String
 module.exports.getSitefinityVersion = function(){
-  return new Promise(resolve => {
-    return '9.2.6200.0'
-  })
+  return '9.2.6201.0'
 }
 
 // Takes the readme, returns a compatability table
@@ -77,7 +75,16 @@ const parseTable = function(readme){
   // Parses the row into an array the gets zipped
   // @url http://stackoverflow.com/q/40401466/79722
   const parseRow = x => x.slice(1, -1).trim().replace('v.','').replace('v','').split(/\s+(?:\||-|to)\s+/)
-  const table = map(zipRow, map(parseRow, rows))
+
+  // Fixes a problem with SF docs being weird
+  const safelyParseRow = x => {
+    var row = parseRow(x)
+    if(row.length === 3)
+      return [row[0], row[0], row[1], row[2]]
+    else
+      return row
+  }
+  const table = map(zipRow, map(safelyParseRow, rows))
   return table
 }
 module.exports.parseTable = parseTable;
@@ -92,13 +99,9 @@ module.exports.getCompatibility = function(){
   return new Promise((resolve, reject) => {
     log('Getting the feather -> sitefinity compatability table..')
     request(opts, (error, res, body) => {
-      /* istanbul ignore else  */
-      if(!error && res.statusCode === 200){
-        log('Response: ' + colors.green(res.statusCode + ' OK'))
-      } else {
-        log('Response: ' + colors.red(res.statusCode + ' ERROR!'))
+      /* istanbul ignore if  */
+      if(error || res.statusCode !== 200)
         error ? reject(error) : reject('Response: ' + res.statusCode)
-      }
       resolve(parseTable(body))
     })
   })
