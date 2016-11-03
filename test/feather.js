@@ -5,7 +5,7 @@ var chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
 var expect = chai.expect
 const exec = require('child_process').exec
-const Bootstrap = require('../scripts/feather.js')
+const Feather = require('../scripts/feather.js')
 
 describe('Feather Fetcher', function(){
 
@@ -21,32 +21,42 @@ describe('Feather Fetcher', function(){
     setTimeout(done, 1000)
   })
 
+  it('can list packages', function(){
+    this.timeout(15000)
+    return Feather.listPackages()
+      .then(function(packages){
+        expect(packages).to.be.an('array')
+        expect(packages[0].name).to.be.a('string')
+        expect(packages[0].zipball_url).to.be.a('string')
+      })
+  })
+
   it('can grab the latest package', function(){
     this.timeout(15000)
-    return Bootstrap.getLatest()
+    return Feather.getLatest()
       .then(function(x){
         expect(x).to.be.a('array')
         expect(x).to.have.length(4)
       })
   })
 
-  it('can install Bootstrap', function(){
+  it('can install Feather', function(){
     this.retries(3);
-    return Bootstrap.install(Bootstrap.Packages[0])
+    return Feather.install(Feather.Packages[0])
       .then(function(res){
         expect(res).to.be.a('string')
       })
   })
   it('can gather Foundation', function(){
     this.retries(3);
-    return Bootstrap.install(Bootstrap.Packages[1])
+    return Feather.install(Feather.Packages[1])
       .then(function(res){
         expect(res).to.be.a('string')
       })
   })
   it('can gather SemanticUI', function(){
     this.retries(3);
-    return Bootstrap.install(Bootstrap.Packages[2])
+    return Feather.install(Feather.Packages[2])
       .then(function(res){
         expect(res).to.be.a('string')
       })
@@ -54,14 +64,14 @@ describe('Feather Fetcher', function(){
 
   it('can gather Minimal', function(){
     this.retries(3);
-    return Bootstrap.install(Bootstrap.Packages[3])
+    return Feather.install(Feather.Packages[3])
       .then(function(res){
         expect(res).to.be.a('string')
       })
   })
 
   it('can clean up after itself', function(){
-    return Bootstrap.cleanup()
+    return Feather.cleanup()
       .then(function(res){
         expect(res).to.be.true
       })

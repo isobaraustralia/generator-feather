@@ -44,9 +44,31 @@ const VerifyPackage = (pkg) => {
   return pkg
 }
 
-// Logging
+// Logging, disable when running test suite
 function log(msg, extra){
+  /* istanbul ignore if */
   if(process.env.NODE_ENV !== 'test') extra ? console.log(msg, extra) : console.log(msg)
+}
+
+// Return a list of packages as a Promise
+module.exports.listPackages = function(){
+  const opts = {
+    url: 'https://api.github.com/repos/Sitefinity/feather-packages/releases',
+    headers: { 'User-Agent': 'request' }
+  }
+  return new Promise((resolve, reject) => {
+    log('Getting a list of the latest packages..')
+    request(opts, (error, res, body) => {
+      /* istanbul ignore else  */
+      if(!error && res.statusCode === 200){
+        log('Response: ' + colors.green(res.statusCode + ' OK'))
+      } else {
+        log('Response: ' + colors.red(res.statusCode + ' ERROR!'))
+        error ? reject(error) : reject('Response: ' + res.statusCode)
+      }
+      resolve(JSON.parse(body))
+    })
+  })
 }
 
 module.exports.getLatest = function(){
@@ -59,7 +81,6 @@ module.exports.getLatest = function(){
     log('Downloading Feather from github..')
     request
       .get(latestPackage)
-      .on('error', err => reject(err))
       .on('response', res => log('Response: ' + colors.green(res.statusCode + ' OK') ))
       .pipe(fs.createWriteStream(zipFile))
       .on('finish', res => {
@@ -67,6 +88,7 @@ module.exports.getLatest = function(){
         // Extract Zip to tmp folder
         log('Download Complete, Extracting..')
         extract(zipFile, {dir: outFolder}, (err) => {
+          /* istanbul ignore if */
           if(err) return reject(err)
 
           // Validate Packages
@@ -90,6 +112,7 @@ module.exports.install = function(installPkg){
     // Extract the package and return the location
     log('Extracting ' + installPkg.name + ' Package..')
     ncp(outFolder + installPkg.path, outFolder + 'pkg/', ncpOptions, (err) => {
+      /* istanbul ignore if  */
       if(err) return reject(err)
       return resolve(outFolder + 'pkg/')
       })
