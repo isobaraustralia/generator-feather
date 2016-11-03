@@ -6,7 +6,7 @@
   "author": "",
   "dependencies": {
     <%- framework == 'Bootstrap' ? '"bootstrap-sass": "^3.3.7",': '' %>
-    <%- framework == 'Foundation' ? '"foundation-sites": "^6.2.4",': '' %>
+    <%- framework == 'Foundation' ? '"foundation-sites": "^5.5.3",': '' %>
     "jquery": "^3.1.1"
   },
   "devDependencies": {
