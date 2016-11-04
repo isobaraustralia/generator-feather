@@ -14,22 +14,25 @@ Yeoman project for setting up a modern build setup for [Sitefinity Feather](http
 ## Requirements
 
 - Sitefinity 9.2
-- [NodeJS](https://nodejs.org/en/download/current/) 4 or later (6 Recommended)
-- [Yarn](https://yarnpkg.com)
-- [Yeoman](http://yeoman.io/) - `yarn global add yo`
+- [NodeJS](https://nodejs.org/en/download/current/) 4 or later (6+ Recommended)
+- [Yarn](https://yarnpkg.com) - For node module management and task running
+- [Yeoman](http://yeoman.io/) `npm i -g yo`
 
 ## Where to install
 
-It is assumed that you will be installing feather to `~/ResourcePackages`.
+It is assumed that you will be installing feather to `~/ResourcePackages` and that web.config can be found in the parent folder.
 
 ## Installing
 
-You can being by simply typing `yo` and follow the prompts to install `feather`.
-
-Or you run the following to first install it globally then start the install
+Generator Feather can be added to yeoman by running the following command in your terminal:
 
 ```sh
-yarn global add generator-feather
+npm i -g generator-feather
+```
+
+Once installed, you can begin bootstrapping/upgrading a repo by moving into `ResourcePackages/` in your terminal and running:
+
+```sh
 yo feather
 ```
 
@@ -46,9 +49,35 @@ Once installed, you will now be able to use yarn to run your project's tasks.
 - `yarn run lintfix` - Fix linting issues
 - `yarn run test` - Built in mocha and unit tests to get you going
 
-## Build System Explained
+## Project Structure
 
 The build system is built around [Webpack](https://webpack.github.io/) and uses Yarn to manage your dependencies. By default all your code is contained in the `src/` folder and starts with `src/js/app.js` as it's entry point.
+
+```
+assets/
+  js/
+    app.js
+  css/
+    styles.css
+  img/
+  fonts/
+src/
+  js/ - All your .js source code
+    feather.js - Loads feather into your bundle, include the stylesheets
+    app.js - Your javascript entry point
+  sass/ - All .sass/.scss files go here
+    feather.sass - Loads all feather modules for your chosen framework
+    styles.sass - Your stylesheet entry point
+  img/ - All source images will be compressed and copied to /assets/img/ on build
+    favicon.png - Your favicon that will be used
+  sprite/ - Contains images that are passed to spritesmith to generate a spritesheet with retina support
+```
+
+## Webpack Dev Server
+
+The default template that is generated contains code to dynamically select which asset bundle to server. If you visit the site normally it will serve the compiled assets from the server like normal. However, if you are running webpack-dev-server (`yarn run dev`) then sitefinity will serve the bundle generated locally at `localhost:8080`.
+
+While sitefinity is serving your local bundle, any changes you make to your source will be rebuilt and hot reloaded on the page automatically. This allows you to make any frontend changes (asside from changes to Views) and preview them without needing to refresh the page.
 
 ## More Information
 
