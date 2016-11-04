@@ -11,7 +11,6 @@ const R = require('ramda')
 const tmpFolder = './tmp/'
 const zipFile = tmpFolder + 'feather.latest.zip'
 const outFolder = tmpFolder + 'feather.bootstrap/'
-const latestPackage = 'https://github.com/Sitefinity/feather-packages/archive/master.zip'
 const tick = colors.green('✔')
 const cross = colors.red('✖')
 const root = __dirname.replace('tools','') // root folder of quill
@@ -54,10 +53,14 @@ function log(msg, extra){
   if(process.env.NODE_ENV !== 'test') extra ? console.log(msg, extra) : console.log(msg)
 }
 
-// Gets the current version of sitefinity
+// Gets the current version of sitefinity based of a passed string containing web.config
+// @param String web.config contents
 // @return String
-module.exports.getSitefinityVersion = function(){
-  return '9.2.6201.0'
+module.exports.getSitefinityVersion = function(webconfig){
+  const startI = webconfig.indexOf('name="Telerik.Sitefinity"')
+  const versionStart = webconfig.indexOf('newVersion="', startI) + 12
+  const versionEnd = webconfig.indexOf('"', versionStart)
+  return webconfig.slice(versionStart, versionEnd)
 }
 
 // Takes the readme, returns a compatability table
@@ -157,7 +160,7 @@ module.exports.listPackages = function(){
     request(opts, (error, res, body) => {
       /* istanbul ignore else  */
       if(!error && res.statusCode === 200){
-        log('Response: ' + colors.green(res.statusCode + ' OK'))
+        //log('Response: ' + colors.green(res.statusCode + ' OK'))
       } else {
         log('Response: ' + colors.red(res.statusCode + ' ERROR!'))
         error ? reject(error) : reject('Response: ' + res.statusCode)
@@ -167,18 +170,18 @@ module.exports.listPackages = function(){
   })
 }
 
-// 
-module.exports.getLatest = function(){
+//
+module.exports.getPackage = function(zipballUrl){
 
   // Setup tmp folder
   try { fs.mkdirSync(tmpFolder) } catch(e) {}
 
   return new Promise((resolve, reject) => {
     // Grab Latest Zip of feather-packages
-    log('Downloading Feather from github..')
+    log('Downloading Feather from ' + zipballUrl)
     request
-      .get(latestPackage)
-      .on('response', res => log('Response: ' + colors.green(res.statusCode + ' OK') ))
+      .get(zipballUrl)
+      //.on('response', res => log('Response: ' + colors.green(res.statusCode + ' OK') ))
       .pipe(fs.createWriteStream(zipFile))
       .on('finish', res => {
 

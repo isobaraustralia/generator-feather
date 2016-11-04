@@ -4,6 +4,7 @@ const R = require('ramda')
 const Feather = require('../../scripts/feather.js')
 const path = require('path')
 const colors = require('colors/safe')
+const fs = require('fs')
 
 module.exports = generators.Base.extend({
 
@@ -12,22 +13,29 @@ module.exports = generators.Base.extend({
   },
 
   initializing: function(){
-    this.sfVersion = Feather.getSitefinityVersion()
-    this.log('Sitefinity ' + colors.bold(colors.green(this.sfVersion)) + ' detected')
+    this.foundWebConfig = fs.existsSync('../web.config')
+    if(this.foundWebConfig){
+      this.sfVersion = Feather.getSitefinityVersion(fs.readFileSync('../web.config', 'utf8'))
+      this.log('Sitefinity version ' + colors.bold(colors.green(this.sfVersion)) + ' detected')
+    } else {
+      this.sfVersion = 'latest'
+      this.log(colors.red('Error: ') + 'web.config not found at: ' + path.resolve('../'))
+      this.log('Assuming latest sitefinity version')
+    }
     return Feather.listPackages()
       .then(function(packages){
-        this.log('Found ' + colors.green(packages.length) + ' versions')
+        this.log('Found ' + colors.green(packages.length) + ' versions of feather')
         this.allVersions = packages
         this.versionsList = R.append('latest', R.map(x => x.name, packages))
         return Feather.getCompatibility()
       }.bind(this)).then(function(table){
-        const validVersion = Feather.getValidVersion(Feather.getSitefinityVersion(), table)
+        const validVersion = Feather.getValidVersion(this.sfVersion, table)
         if(validVersion === false){
           this.log(colors.red('Error ') + 'determining a valid package to install! defaulting to latest')
           this.defaultVersion = 'latest'
         } else {
           this.defaultVersion = validVersion.feather_to
-          this.log('Compatible version detected: ' + colors.bold(colors.green(this.defaultVersion)))
+          this.log('Compatible Feather version detected: ' + colors.bold(colors.green(this.defaultVersion)))
         }
       }.bind(this))
   },
@@ -50,15 +58,22 @@ module.exports = generators.Base.extend({
       name: 'version',
       message: 'What version of Feather do you want to use?',
       choices: this.versionsList,
-      default: 'latest'
+      default: this.defaultVersion
     }]).then(function(answers){
       this.answers = answers
+
+      // determine package to download
+      if(this.answers.version === 'latest'){
+        this.zipballUrl = 'https://github.com/Sitefinity/feather-packages/archive/master.zip'
+      } else {
+        this.zipballUrl = 'https://github.com/Sitefinity/feather-packages/archive/master.zip'
+      }
     }.bind(this))
   },
 
   getPackages: function(){
     var yo = this
-    return Feather.getLatest()
+    return Feather.getPackage(this.zipballUrl)
       .then(packages => yo.ValidPackages = packages)
   },
 

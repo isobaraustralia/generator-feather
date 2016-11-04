@@ -31,7 +31,27 @@ describe('Feather Fetcher', function(){
       })
   })
 
-  it('can get the SF version of the current install')
+  it('can get the SF version of the current install', function(){
+    const sample = `<dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Telerik.Sitefinity" publicKeyToken="b28c218413bdf563" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-9.2.6201.0" newVersion="9.2.6201.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Telerik.Sitefinity.Model" publicKeyToken="b28c218413bdf563" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-9.2.6201.0" newVersion="9.2.6201.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Telerik.Sitefinity.Utilities" publicKeyToken="b28c218413bdf563" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-9.2.6201.0" newVersion="9.2.6201.0" />
+      </dependentAssembly>
+      <dependentAssembly>`
+    const result = Feather.getSitefinityVersion(sample)
+    expect(result).to.equal('9.2.6201.0')
+  })
 
   it('can determine is one version is greater than another', function(){
     const valids = [
