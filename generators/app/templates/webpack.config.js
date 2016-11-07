@@ -36,7 +36,7 @@ module.exports = {
       src: { cwd: path.resolve(__dirname, 'src/sprites'), glob: '*.png' },
       target: {
         image: path.resolve(__dirname, 'src/img/sprite.png'),
-        css: path.resolve(__dirname, 'src/sass/sprite.scss')
+        css: path.resolve(__dirname, 'src/sass/settings/sprite.scss')
       },
       apiOptions: {	cssImageRef: "~sprite.png" },
       retina: '@2x'
