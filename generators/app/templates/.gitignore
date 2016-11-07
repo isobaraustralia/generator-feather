@@ -9,5 +9,4 @@ coverage
 # Compiled Files
 src/img/sprite.png
 src/img/sprite@2x.png
-src/sass/sprite.scss
-assets/
+src/sass/settings/sprite.scss
