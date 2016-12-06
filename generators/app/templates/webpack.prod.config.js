@@ -3,7 +3,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var webpack = require('webpack')
 
-// Disable dev flags
+// Fixup link paths
+cfg.output.publicPath = '../'
 
 // Extract css bundle
 var extractSASS = new ExtractTextPlugin('./css/styles.css')
