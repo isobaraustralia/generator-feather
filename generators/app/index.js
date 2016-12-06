@@ -20,7 +20,7 @@ module.exports = generators.Base.extend({
       type: 'list',
       name: 'framework',
       message: 'Which framework do you want to use?',
-      choices: ['Bootstrap', 'Foundation', 'Minimal', 'SemantecUi'],
+      choices: ['Bootstrap', 'Foundation', 'Minimal', 'SemanticUI'],
       store: true
     }, {
       type: 'input',
